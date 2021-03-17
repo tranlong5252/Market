@@ -1,0 +1,13 @@
+name: Market
+version: ${project.version}
+main: me.manaki.plugin.market.Market
+api-version: 1.16
+depend: [ Vault ]
+softdepend: [ Shops ]
+commands:
+  market:
+    description: Hi I'm MankaiStep
+    aliases:
+      - thuonglai
+      - markets
+      - cho

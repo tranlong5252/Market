@@ -1,0 +1,84 @@
+trans:
+  STONE: Đá
+  COAL_ORE: Quặng than
+  REDSTONE_ORE: Quặng đá đỏ
+  LAPIS_ORE: Quặng lưu ly
+  IRON_ORE: Quặng sắt
+  GOLD_ORE: Quặng vàng
+  DIAMOND_ORE: Quặng kim cương
+  EMERALD_ORE: Quặng lục bảo
+  NETHER_QUARTZ_ORE: Quặng thạch anh
+  NETHER_GOLD_ORE: Quặng vàng nether
+  WHEAT: Lúa
+  SUGAR_CANE: Mía
+  CARROTS: Cà rốt
+  CARROT: Cà rốt
+  POTATOES: Khoai tây
+  POTATO: Khoai tây
+  BEETROOTS: Củ dền
+  BEETROOT: Củ dền
+  PUMPKIN: Bí ngô
+  MELON: Dưa hấu
+  SWEET_BERRY_BUSH: Quả mọng
+  SWEET_BERRIES: Quả mọng
+  CACTUS: Xương rồng
+  OAK_LOG: Gỗ sồi
+  OAK_WOOD: Gỗ sồi
+  SPRUCE_LOG: Gỗ vân sam
+  SPRUCE_WOOD: Gỗ vân sam
+  BIRCH_LOG: Gỗ bạch dương
+  BIRCH_WOOD: Gỗ bạch dương
+  JUNGLE_LOG: Gỗ rừng
+  JUNGLE_WOOD: Gỗ rừng
+  ACACIA_LOG: Gỗ xiêm gai
+  ACACIA_WOOD: Gỗ xiêm gai
+  DARK_OAK_LOG: Gỗ sồi sẫm
+  DARK_OAK_WOOD: Gỗ sồi sẫm
+  CRIMSON_STEM: Cuống đỏ thẫm
+  CRIMSON_HYPHAE: Cuống đỏ thẫm
+  WARPED_STEM: Cuống kỳ dị
+  WARPED_HYPHAE: Cuống kỳ dị
+
+options:
+  base-point: 5000
+  max-point: 10000
+  check-point: 100
+  time-check: 3600
+
+items:
+  '0':
+    material: wheat3
+    amount: 16
+    base-value: 100
+  '1':
+    material: sugarcane3
+    amount: 16
+    base-value: 120
+  '2':
+    material: CARROT
+    amount: 16
+    base-value: 140
+  '3':
+    material: POTATO
+    amount: 16
+    base-value: 160
+  '4':
+    material: BEETROOT
+    amount: 16
+    base-value: 180
+  '5':
+    material: MELON
+    amount: 16
+    base-value: 200
+  '6':
+    material: PUMPKIN
+    amount: 16
+    base-value: 220
+  '7':
+    material: SWEET_BERRIES
+    amount: 16
+    base-value: 240
+  '8':
+    material: CACTUS
+    amount: 16
+    base-value: 260
