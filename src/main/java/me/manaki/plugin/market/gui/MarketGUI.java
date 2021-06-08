@@ -40,6 +40,7 @@ public class MarketGUI {
 		double percent = Utils.round((double) Commodities.getPoint(id) * 100 / Market.BASE_POINT);
 
 		lore.add("§f§m                    ");
+		lore.add("§aClick chuột trái để xem");
 		lore.add("§aClick chuột phải để bán");
 		lore.add("§aSố lượng: §f" + item.getAmount());
 		lore.add("§aGiá: §f" + Commodities.getPrice(id) + "$" + " §8(" + percent + "%)");
@@ -72,21 +73,28 @@ public class MarketGUI {
 		e.setCancelled(true);
 		if (e.getClickedInventory() != e.getWhoClicked().getOpenInventory().getTopInventory()) return;
 		if (e.getClickedInventory() == null) return;
-		if (e.getClick() != ClickType.RIGHT) return;
-		
-		Bukkit.getScheduler().runTask(Market.get(), () -> {
-			Player player = (Player) e.getWhoClicked();
-			int slot = e.getSlot();
+		Player player = (Player) e.getWhoClicked();
+		int slot = e.getSlot();
+
+		player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1, 1);
+
+		if (e.getClick() == ClickType.RIGHT) {
+			Bukkit.getScheduler().runTask(Market.get(), () -> {
+				if (!Commodities.itemSlots.containsKey(slot)) return;
+				if (!Commodities.sell(slot, player)) {
+					player.sendMessage("§cXảy ra lỗi, không bán được");
+					player.sendMessage("§cPhải gộp item thành stack mới bán được!");
+					return;
+				} else {
+					e.getInventory().setItem(slot, getItem(slot));
+				}
+			});
+		}
+		else if (e.getClick() == ClickType.LEFT) {
 			if (!Commodities.itemSlots.containsKey(slot)) return;
-			if (!Commodities.sell(slot, player)) {
-				player.sendMessage("§cXảy ra lỗi, không bán được");
-				player.sendMessage("§cPhải gộp item thành stack mới bán được!");
-				return;
-			} else {
-				e.getInventory().setItem(slot, getItem(slot));
-			}	
-			player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_BUTTON_CLICK_ON, 1, 1);
-		});
+			CommodityGUI.open(player, Commodities.itemSlots.get(slot));
+		}
+
 		
 	}
 	
