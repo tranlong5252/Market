@@ -108,7 +108,7 @@ public class Commodities {
 	}
 	
 	private static void savePoint(int itemId, FileConfiguration config) {
-		int pointValue = realPoints.get(itemId);
+		int pointValue = getPoint(itemId);
 		config.set("points." + itemId + ".value", pointValue);
 		config.set("points." + itemId + ".last-updated", lastUpdated.get(itemId));
 	}
