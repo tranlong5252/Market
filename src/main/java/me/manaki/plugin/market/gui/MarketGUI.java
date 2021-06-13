@@ -47,9 +47,10 @@ public class MarketGUI {
 		lore.add("§f§m                    ");
 		
 		ItemMeta meta = itemStack.getItemMeta();
-		meta.setDisplayName("§e§lx" + item.getAmount() + " " + item.getName());
+//		meta.setDisplayName("§e§lx" + item.getAmount() + " " + item.getName());
 		meta.setLore(lore);
 		itemStack.setItemMeta(meta);
+		itemStack.setAmount(item.getAmount());
 		
 		return itemStack;
 	}
