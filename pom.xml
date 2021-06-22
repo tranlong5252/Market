@@ -90,5 +90,11 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.RemVN</groupId>
+            <artifactId>LangUtils</artifactId>
+            <version>4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

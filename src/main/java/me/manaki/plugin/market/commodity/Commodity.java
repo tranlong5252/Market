@@ -1,57 +1,50 @@
 package me.manaki.plugin.market.commodity;
 
-import me.manaki.plugin.market.Market;
-import me.manaki.plugin.market.gui.MarketGUI;
 import org.bukkit.inventory.ItemStack;
 
 public class Commodity {
-	
-	private String id;
-	private CommodityType type;
-	private int amount;
-	private double baseValue;
 
-	private ItemStack model;
-	
-	public Commodity(String id, CommodityType type, int amount, double baseValue) {
-		this.id = id;
-		this.type = type;
-		this.amount = amount;
-		this.baseValue = baseValue;
+    private final String id;
+    private final CommodityType type;
+    private final int amount;
+    private final double baseValue;
 
-		this.model = type.get(id);
-	}
+    private final ItemStack model;
 
-	public boolean is(ItemStack is) {
-		return model.isSimilar(is);
-	}
+    public Commodity(String id, CommodityType type, int amount, double baseValue) {
+        this.id = id;
+        this.type = type;
+        this.amount = amount;
+        this.baseValue = baseValue;
 
-	public ItemStack cloneModel() {
-		return model.clone();
-	}
+        this.model = type.get(id);
+    }
 
-	public String getName() {
-		if (model.hasItemMeta() && model.getItemMeta().hasDisplayName()) return model.getItemMeta().getDisplayName();
-		return Market.trans(model.getType());
-	}
+    public boolean is(ItemStack is) {
+        return model.isSimilar(is);
+    }
 
-	public String getID() {
-		return id;
-	}
+    public ItemStack cloneModel() {
+        return model.clone();
+    }
 
-	public CommodityType getType() {
-		return type;
-	}
+    public String getID() {
+        return id;
+    }
 
-	public int getAmount() {
-		return amount;
-	}
+    public CommodityType getType() {
+        return type;
+    }
 
-	public double getBaseValue() {
-		return baseValue;
-	}
+    public int getAmount() {
+        return amount;
+    }
 
-	public ItemStack getModel() {
-		return model;
-	}
+    public double getBaseValue() {
+        return baseValue;
+    }
+
+    public ItemStack getModel() {
+        return model;
+    }
 }

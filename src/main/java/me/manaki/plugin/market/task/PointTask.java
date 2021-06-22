@@ -6,6 +6,7 @@ import me.manaki.plugin.market.commodity.Commodities;
 import me.manaki.plugin.market.gui.MarketGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PointTask extends BukkitRunnable {
@@ -26,13 +27,12 @@ public class PointTask extends BukkitRunnable {
 
         // Update player GUI
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getOpenInventory() != null) {
-                var iv = player.getOpenInventory();
-                if (!iv.getTitle().equals(MarketGUI.TITLE)) return;
-                Bukkit.getScheduler().runTask(Market.get(), () -> {
-                    MarketGUI.openGUI(player);
-                });
-            }
+            player.getOpenInventory();
+            InventoryView iv = player.getOpenInventory();
+            if (!iv.getTitle().equals(MarketGUI.TITLE)) return;
+            Bukkit.getScheduler().runTask(Market.get(), () -> {
+                MarketGUI.openGUI(player);
+            });
         }
     }
 
