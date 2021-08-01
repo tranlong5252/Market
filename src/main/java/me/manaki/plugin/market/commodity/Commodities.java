@@ -6,7 +6,9 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 import me.manaki.plugin.market.Market;
 import me.manaki.plugin.market.api.MoneyAPI;
+import me.manaki.plugin.market.event.PlayerMarketSellEvent;
 import me.manaki.plugin.market.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -103,7 +105,12 @@ public class Commodities {
 		// Add money
 		MoneyAPI.giveMoney(player, getPrice(itemId));
 		player.sendMessage("§aĐã bán §f" + "x" + marketCommodity.getAmount() + " " + marketCommodity.getName() + " §anhận " + getPrice(itemId) + "$");
-		
+
+		// Event
+		var is = marketCommodity.getModel().clone();
+		int amount = marketCommodity.getAmount();
+		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, is, amount));
+
 		return true;
 	}
 	
