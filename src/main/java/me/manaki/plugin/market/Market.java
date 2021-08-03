@@ -1,6 +1,7 @@
 package me.manaki.plugin.market;
 
 import com.google.common.collect.Maps;
+import me.manaki.plugin.market.gui.MarketGUI;
 import me.manaki.plugin.market.listener.MarketListener;
 import me.manaki.plugin.market.command.MarketCommand;
 import me.manaki.plugin.market.commodity.Commodities;
@@ -62,6 +63,8 @@ public class Market extends JavaPlugin{
 		CHECK_POINT = config.getInt("options.check-point");
 		TIME_CHECK = config.getInt("options.time-check");
 		MAX_POINT = config.getInt("options.max-point");
+
+		MarketGUI.SELL_LIMIT = config.getInt("sell-limit", 100000);
 
 		trans.clear();
 		for (String m : config.getConfigurationSection("trans").getKeys(false)) {

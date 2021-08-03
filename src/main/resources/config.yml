@@ -1,3 +1,5 @@
+sell-limit: 100000
+
 trans:
   STONE: Đá
   COAL_ORE: Quặng than

@@ -24,7 +24,7 @@ public class MarketGUI {
 	private final static int PRE_BUTTON = 45;
 	private final static int NEXT_BUTTON = 53;
 
-	public final static int SELL_LIMIT = 70000;
+	public static int SELL_LIMIT = 70000;
 
 	public static void openGUI(Player player, int page) {
 		Inventory inv = Bukkit.createInventory(new MGUIHolder(page), 54, TITLE + " - Trang " + page);
