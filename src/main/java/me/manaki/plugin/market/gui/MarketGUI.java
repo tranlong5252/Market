@@ -32,7 +32,6 @@ public class MarketGUI {
 		Bukkit.getScheduler().runTaskAsynchronously(Market.get(), () -> {
 			int min = (page - 1) * 45;
 			int max = Math.min((page - 1) * 45 + 44, Commodities.getHighestSlot());
-			System.out.println("min: " + min + "; max" + max);
 
 			for (int i = 0 ; i <= max - min ; i++) {
 				int id = min + i;
