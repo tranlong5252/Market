@@ -23,7 +23,7 @@ public class MarketCommand implements CommandExecutor {
 		
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			MarketGUI.openGUI(player);
+			MarketGUI.openGUI(player, 1);
 		} else sender.sendMessage("Ingame command!");
 		
 		

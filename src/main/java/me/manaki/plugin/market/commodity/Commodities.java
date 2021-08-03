@@ -1,19 +1,18 @@
 package me.manaki.plugin.market.commodity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import me.manaki.plugin.market.Market;
 import me.manaki.plugin.market.api.MoneyAPI;
 import me.manaki.plugin.market.event.PlayerMarketSellEvent;
+import me.manaki.plugin.market.gui.MarketGUI;
 import me.manaki.plugin.market.util.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+
+import java.util.*;
 
 public class Commodities {
 	
@@ -22,6 +21,8 @@ public class Commodities {
 
 	public static Map<Integer, Long> lastUpdated = new HashMap<Integer, Long> ();
 	public static Map<Integer, Integer> currentPoints = new HashMap<Integer, Integer> ();
+
+	public static Map<String, Double> earned = Maps.newConcurrentMap();
 
 	public static void load(FileConfiguration config, FileConfiguration dataConfig) {
 		itemSlots.clear();
@@ -67,6 +68,14 @@ public class Commodities {
 	}
 	
 	public static boolean sell(int itemId, Player player) {
+		// Check limit
+		if (!earned.containsKey(player.getName())) earned.put(player.getName(), 0d);
+		double sold = earned.get(player.getName());
+		if (sold >= MarketGUI.SELL_LIMIT) {
+			player.sendMessage("§cBạn đã bán chạm mức tối đa là §f§l" + MarketGUI.SELL_LIMIT + "$");
+			return false;
+		}
+
 		Commodity marketCommodity = itemSlots.get(itemId);
 		
 		// Check inv
@@ -103,7 +112,9 @@ public class Commodities {
 		lastUpdated.put(itemId, System.currentTimeMillis());
 		
 		// Add money
-		MoneyAPI.giveMoney(player, getPrice(itemId));
+		double price = getPrice(itemId);
+		MoneyAPI.giveMoney(player, price);
+		earned.put(player.getName(), sold + price);
 		player.sendMessage("§aĐã bán §f" + "x" + marketCommodity.getAmount() + " " + marketCommodity.getName() + " §anhận " + getPrice(itemId) + "$");
 
 		// Event
@@ -125,6 +136,37 @@ public class Commodities {
 			savePoint(i, config);
 		}
 		Market.get().saveData(config);
+	}
+
+	public static int getHighestSlot() {
+		int max = 0;
+		for (Integer i : itemSlots.keySet()) {
+			max = Math.max(i, max);
+		}
+		return max;
+	}
+
+	public static Map<String, Double> calTop10Sold() {
+		Map<String, Double> result = Maps.newLinkedHashMap();
+
+		List<Double> values = new ArrayList<> (earned.values());
+		Collections.sort(values, new Comparator<Double>() {
+			@Override
+			public int compare(Double o1, Double o2) {
+				return -1 * o1.compareTo(o2);
+			}
+		});
+
+		for (int i = 0 ; i < Math.min(values.size(), 10) ; i++) {
+			double value = values.get(i);
+			for (Map.Entry<String, Double> e : earned.entrySet()) {
+				if (e.getValue() == value) {
+					result.put(e.getKey(), value);
+				}
+			}
+		}
+
+		return result;
 	}
 	
 }

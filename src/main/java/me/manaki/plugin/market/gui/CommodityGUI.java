@@ -32,7 +32,7 @@ public class CommodityGUI {
         if (e.getInventory().getHolder() instanceof CommodityGUIHolder) {
             var player = (Player) e.getPlayer();
             Bukkit.getScheduler().runTask(Market.get(), () -> {
-               MarketGUI.openGUI(player);
+               MarketGUI.openGUI(player, 1);
             });
         }
     }
