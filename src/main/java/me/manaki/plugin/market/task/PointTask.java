@@ -5,6 +5,7 @@ import me.manaki.plugin.market.Market;
 import me.manaki.plugin.market.commodity.Commodities;
 import me.manaki.plugin.market.gui.MGUIHolder;
 import me.manaki.plugin.market.gui.MarketGUI;
+import me.manaki.plugin.market.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class PointTask extends BukkitRunnable {
 
     private long lastAnnounce = System.currentTimeMillis();
-    private final long PERIOD = 300000;
+    private final long PERIOD = 600000;
 
     @Override
     public void run() {
@@ -58,7 +59,8 @@ public class PointTask extends BukkitRunnable {
                     c++;
                     var k = e.getKey();
                     var v = e.getValue();
-                    p.sendMessage("§6§l#" + c + ". §a" + k + ": §f" + v + "$");
+                    var vs = Utils.round(v);
+                    p.sendMessage("§6§l#" + c + ". §a" + k + ": §f" + vs + "$");
                 }
                 p.sendMessage("§f-------------------------");
             }
