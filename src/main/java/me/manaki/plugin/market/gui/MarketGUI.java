@@ -142,8 +142,8 @@ public class MarketGUI {
 			return;
 		}
 
+		int itemSlot = (page - 1) * 45 + slot;
 		if (e.getClick() == ClickType.RIGHT) {
-			int itemSlot = (page - 1) * 45 + slot;
 			Bukkit.getScheduler().runTask(Market.get(), () -> {
 				if (!Commodities.itemSlots.containsKey(itemSlot)) return;
 				if (!Commodities.sell(itemSlot, player)) {
@@ -156,8 +156,8 @@ public class MarketGUI {
 			});
 		}
 		else if (e.getClick() == ClickType.LEFT) {
-			if (!Commodities.itemSlots.containsKey(slot)) return;
-			CommodityGUI.open(player, Commodities.itemSlots.get(slot));
+			if (!Commodities.itemSlots.containsKey(itemSlot)) return;
+			CommodityGUI.open(player, Commodities.itemSlots.get(itemSlot));
 		}
 
 		
