@@ -5,6 +5,7 @@ import me.manaki.plugin.market.Market;
 import me.manaki.plugin.market.api.MoneyAPI;
 import me.manaki.plugin.market.event.PlayerMarketSellEvent;
 import me.manaki.plugin.market.gui.MarketGUI;
+import me.manaki.plugin.market.player.MarketPlayers;
 import me.manaki.plugin.market.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,9 +70,8 @@ public class Commodities {
 	
 	public static boolean sell(int itemId, Player player) {
 		// Check limit
-		if (!earned.containsKey(player.getName())) earned.put(player.getName(), 0d);
-		double sold = earned.get(player.getName());
-		if (sold >= MarketGUI.SELL_LIMIT) {
+		var mp = MarketPlayers.get(player.getName());
+		if (!mp.canAdd()) {
 			player.sendMessage("§cBạn đã bán chạm mức tối đa là §f§l" + MarketGUI.SELL_LIMIT + "$");
 			return false;
 		}
@@ -114,7 +114,14 @@ public class Commodities {
 		// Add money
 		double price = getPrice(itemId);
 		MoneyAPI.giveMoney(player, price);
-		earned.put(player.getName(), sold + price);
+
+		// Data
+		mp.add(price);
+		mp.save();
+
+		// Cache
+		earned.put(player.getName(), earned.getOrDefault(player.getName(), 0d) + price);
+
 		player.sendMessage("§aĐã bán §f" + "x" + marketCommodity.getAmount() + " " + marketCommodity.getName() + " §anhận " + getPrice(itemId) + "$");
 
 		// Event

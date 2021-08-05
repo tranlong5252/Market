@@ -143,14 +143,15 @@ public class MarketGUI {
 		}
 
 		if (e.getClick() == ClickType.RIGHT) {
+			int itemSlot = (page - 1) * 45 + slot;
 			Bukkit.getScheduler().runTask(Market.get(), () -> {
-				if (!Commodities.itemSlots.containsKey(slot)) return;
-				if (!Commodities.sell(slot, player)) {
+				if (!Commodities.itemSlots.containsKey(itemSlot)) return;
+				if (!Commodities.sell(itemSlot, player)) {
 					player.sendMessage("§cXảy ra lỗi, không bán được");
 					player.sendMessage("§cPhải gộp item thành stack mới bán được!");
 					return;
 				} else {
-					e.getInventory().setItem(slot, getItem(slot));
+					e.getInventory().setItem(slot, getItem(itemSlot));
 				}
 			});
 		}
