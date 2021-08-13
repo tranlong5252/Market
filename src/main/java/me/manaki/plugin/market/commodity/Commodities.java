@@ -8,6 +8,7 @@ import me.manaki.plugin.market.gui.MarketGUI;
 import me.manaki.plugin.market.player.MarketPlayers;
 import me.manaki.plugin.market.util.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -67,70 +68,128 @@ public class Commodities {
 		if (point > Market.MAX_POINT) point = Market.MAX_POINT;
 		return point;
 	}
-	
-	public static boolean sell(int itemId, Player player) {
-		// Check limit
+
+	public static boolean sell(int itemId, Player player, boolean all) {
+		Commodity commodity = itemSlots.get(itemId);
+		var inv = player.getInventory();
 		var mp = MarketPlayers.get(player.getName());
-		if (!mp.canAdd()) {
-			player.sendMessage("§cBạn đã bán chạm mức tối đa là §f§l" + MarketGUI.SELL_LIMIT + "$");
+
+		double maxEarn = MarketGUI.SELL_LIMIT - mp.getSum();
+		double price = getPrice(itemId);
+
+		int count = 0;
+		for (ItemStack is : inv.getContents()) {
+			if (is == null) continue;
+			if (commodity.is(is)) count += is.getAmount();
+		}
+
+		// Check
+		int times = !all ? (int) Math.min(count < commodity.getAmount() ? 0 : 1, (int) maxEarn / price) : Math.min(count / commodity.getAmount(), Double.valueOf(maxEarn / price).intValue());
+		if (times <= 0) {
+			player.sendMessage("§cKhông đủ số lượng hoặc đã bán chạm mức tối đa của ngày!");
 			return false;
 		}
+		int amount = times * commodity.getAmount();
+		int removed = 0;
 
-		Commodity marketCommodity = itemSlots.get(itemId);
-		
-		// Check inv
-		PlayerInventory inv = player.getInventory();
-		ItemStack[] items = inv.getContents();
-		boolean has = false;
-		for (int i = 0 ; i < items.length ; i ++) {
-			ItemStack item = items[i];
-			if (item != null) {
-				if (marketCommodity.is(item)) {
-					int amount = marketCommodity.getAmount();
-					if (item.getAmount() == amount) {
-						items[i] = null;
-						has = true;
-						break;
-					}
-					else if (item.getAmount() > amount) {
-						item.setAmount(item.getAmount() - amount);
-						has = true;
-						break;
-					}
-					else if (item.getAmount() < amount) continue;
-				}
+		// Remove
+		for (ItemStack is : inv.getContents()) {
+			if (!mp.canAdd()) break;
+			if (removed >= amount) break;
+			if (is == null) continue;
+			if (commodity.is(is)) {
+				int amountToRemove = Math.min(amount - removed, is.getAmount());
+				is.setAmount(is.getAmount() - amountToRemove);
+				removed += amountToRemove;
 			}
 		}
-		if (!has) return false;
-		inv.setContents(items);
-		
-		// Subtract point
-		int point = realPoints.get(itemId);
-		if (point == 0) return true;
-		point--;
-		realPoints.put(itemId, point);
-		lastUpdated.put(itemId, System.currentTimeMillis());
-		
-		// Add money
-		double price = getPrice(itemId);
-		MoneyAPI.giveMoney(player, price);
 
 		// Data
-		mp.add(price);
-		mp.save();
+		int point = realPoints.get(itemId);
+		if (point != 0) {
+			point -= times;
+			realPoints.put(itemId, point);
+			lastUpdated.put(itemId, System.currentTimeMillis());
+		}
 
-		// Cache
+		double earn = times * price;
+		mp.add(earn);
+		mp.save();
+		MoneyAPI.giveMoney(player, earn);
+
+		player.sendMessage("§aBán thành công §fx" + amount + " " + commodity.getName() + " §anhận §f" + earn + "$");
+		player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
 		earned.put(player.getName(), earned.getOrDefault(player.getName(), 0d) + price);
 
-		player.sendMessage("§aĐã bán §f" + "x" + marketCommodity.getAmount() + " " + marketCommodity.getName() + " §anhận " + getPrice(itemId) + "$");
-
 		// Event
-		var is = marketCommodity.getModel().clone();
-		int amount = marketCommodity.getAmount();
-		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, is, amount));
+		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, commodity.getModel().clone(), commodity.getAmount()));
 
 		return true;
 	}
+
+//	public static boolean sell(int itemId, Player player) {
+//		// Check limit
+//		var mp = MarketPlayers.get(player.getName());
+//		if (!mp.canAdd()) {
+//			player.sendMessage("§cBạn đã bán chạm mức tối đa là §f§l" + MarketGUI.SELL_LIMIT + "$");
+//			return false;
+//		}
+//
+//		Commodity marketCommodity = itemSlots.get(itemId);
+//
+//		// Check inv
+//		PlayerInventory inv = player.getInventory();
+//		ItemStack[] items = inv.getContents();
+//		boolean has = false;
+//		for (int i = 0 ; i < items.length ; i ++) {
+//			ItemStack item = items[i];
+//			if (item != null) {
+//				if (marketCommodity.is(item)) {
+//					int amount = marketCommodity.getAmount();
+//					if (item.getAmount() == amount) {
+//						items[i] = null;
+//						has = true;
+//						break;
+//					}
+//					else if (item.getAmount() > amount) {
+//						item.setAmount(item.getAmount() - amount);
+//						has = true;
+//						break;
+//					}
+//					else if (item.getAmount() < amount) continue;
+//				}
+//			}
+//		}
+//		if (!has) return false;
+//		inv.setContents(items);
+//
+//		// Subtract point
+//		int point = realPoints.get(itemId);
+//		if (point == 0) return true;
+//		point--;
+//		realPoints.put(itemId, point);
+//		lastUpdated.put(itemId, System.currentTimeMillis());
+//
+//		// Add money
+//		double price = getPrice(itemId);
+//		MoneyAPI.giveMoney(player, price);
+//
+//		// Data
+//		mp.add(price);
+//		mp.save();
+//
+//		// Cache
+//		earned.put(player.getName(), earned.getOrDefault(player.getName(), 0d) + price);
+//
+//		player.sendMessage("§aĐã bán §f" + "x" + marketCommodity.getAmount() + " " + marketCommodity.getName() + " §anhận " + getPrice(itemId) + "$");
+//
+//		// Event
+//		var is = marketCommodity.getModel().clone();
+//		int amount = marketCommodity.getAmount();
+//		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, is, amount));
+//
+//		return true;
+//	}
 	
 	private static void savePoint(int itemId, FileConfiguration config) {
 		int pointValue = getPoint(itemId);

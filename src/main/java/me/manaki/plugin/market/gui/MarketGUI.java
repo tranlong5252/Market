@@ -55,8 +55,9 @@ public class MarketGUI {
 		double percent = Utils.round((double) Commodities.getPoint(id) * 100 / Market.BASE_POINT);
 
 		lore.add("§f§m                    ");
-		lore.add("§aClick chuột trái để xem");
-		lore.add("§aClick chuột phải để bán");
+		lore.add("§aClick §fChuột trái §ađể xem");
+		lore.add("§aClick §fChuột phải §ađể bán 1 lần");
+		lore.add("§aClick §fShift + Chuột phải §ađể bán hết");
 		lore.add("§aSố lượng: §f" + item.getAmount());
 		lore.add("§aGiá: §f" + Commodities.getPrice(id) + "$" + " §8(" + percent + "%)");
 		lore.add("§f§m                    ");
@@ -146,11 +147,15 @@ public class MarketGUI {
 		if (e.getClick() == ClickType.RIGHT) {
 			Bukkit.getScheduler().runTask(Market.get(), () -> {
 				if (!Commodities.itemSlots.containsKey(itemSlot)) return;
-				if (!Commodities.sell(itemSlot, player)) {
-					player.sendMessage("§cXảy ra lỗi, không bán được");
-					player.sendMessage("§cPhải gộp item thành stack mới bán được!");
-					return;
-				} else {
+				if (Commodities.sell(itemSlot, player, false)) {
+					e.getInventory().setItem(slot, getItem(itemSlot));
+				}
+			});
+		}
+		else if (e.getClick() == ClickType.SHIFT_RIGHT) {
+			Bukkit.getScheduler().runTask(Market.get(), () -> {
+				if (!Commodities.itemSlots.containsKey(itemSlot)) return;
+				if (Commodities.sell(itemSlot, player, true)) {
 					e.getInventory().setItem(slot, getItem(itemSlot));
 				}
 			});
