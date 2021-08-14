@@ -19,6 +19,7 @@ public class MarketPlayers {
     public static void save(MarketPlayer mp) {
         var pd = PlayerDataAPI.get(mp.getName(), HOOK);
         pd.set(KEY, new GsonBuilder().create().toJson(mp));
+        pd.save();
     }
 
 }
