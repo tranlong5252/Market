@@ -115,7 +115,7 @@ public class Commodities {
 
 		double earn = times * price;
 		mp.add(earn);
-		mp.save();
+		Bukkit.getScheduler().runTaskAsynchronously(Market.get(), mp::save);
 		MoneyAPI.giveMoney(player, earn);
 
 		player.sendMessage("§aBán §fx" + amount + " " + commodity.getName() + " §anhận §f" + Utils.round(earn) + "$ §a(Hôm nay có §f" + Utils.round(mp.getSum()) + "$§a)");
