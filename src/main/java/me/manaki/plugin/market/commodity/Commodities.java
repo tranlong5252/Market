@@ -75,6 +75,7 @@ public class Commodities {
 		var mp = MarketPlayers.get(player.getName());
 
 		double maxEarn = MarketGUI.SELL_LIMIT - mp.getSum();
+		double earnedMoney = mp.getSum();
 		double price = getPrice(itemId);
 
 		int count = 0;
@@ -86,7 +87,7 @@ public class Commodities {
 		// Check
 		int times = !all ? (int) Math.min(count < commodity.getAmount() ? 0 : 1, (int) maxEarn / price) : Math.min(count / commodity.getAmount(), Double.valueOf(maxEarn / price).intValue());
 		if (times <= 0) {
-			player.sendMessage("§cKhông đủ số lượng hoặc đã bán chạm mức tối đa của ngày!");
+			player.sendMessage("§cKhông đủ số lượng hoặc đã bán chạm mức tối đa của ngày! (Hôm nay có §f" + Utils.round(earnedMoney) + "$)");
 			return false;
 		}
 		int amount = times * commodity.getAmount();
@@ -117,9 +118,11 @@ public class Commodities {
 		mp.save();
 		MoneyAPI.giveMoney(player, earn);
 
-		player.sendMessage("§aBán thành công §fx" + amount + " " + commodity.getName() + " §anhận §f" + earn + "$");
+		player.sendMessage("§aBán §fx" + amount + " " + commodity.getName() + " §anhận §f" + Utils.round(earn) + "$ §a(Hôm nay có §f" + Utils.round(mp.getSum()) + "$§a)");
 		player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1, 1);
-		earned.put(player.getName(), earned.getOrDefault(player.getName(), 0d) + price);
+
+		// Cache
+		earned.put(player.getName(), earned.getOrDefault(player.getName(), 0d) + earn);
 
 		// Event
 		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, commodity.getModel().clone(), commodity.getAmount()));
