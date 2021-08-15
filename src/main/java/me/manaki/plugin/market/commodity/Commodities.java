@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class Commodities {
@@ -74,7 +75,7 @@ public class Commodities {
 		var inv = player.getInventory();
 		var mp = MarketPlayers.get(player.getName());
 
-		double maxEarn = MarketGUI.SELL_LIMIT - mp.getSum();
+		double maxEarn = mp.getDay() != LocalDate.now().getDayOfMonth() ? MarketGUI.SELL_LIMIT : MarketGUI.SELL_LIMIT - mp.getSum();;
 		double earnedMoney = mp.getSum();
 		double price = getPrice(itemId);
 
