@@ -145,12 +145,12 @@ public class MarketGUI {
 
 		int itemSlot = (page - 1) * 45 + slot;
 		if (e.getClick() == ClickType.RIGHT) {
-			Bukkit.getScheduler().runTask(Market.get(), () -> {
-				if (!Commodities.itemSlots.containsKey(itemSlot)) return;
-				if (Commodities.sell(itemSlot, player, false)) {
+			if (!Commodities.itemSlots.containsKey(itemSlot)) return;
+			if (Commodities.sell(itemSlot, player, false)) {
+				Bukkit.getScheduler().runTask(Market.get(), () -> {
 					e.getInventory().setItem(slot, getItem(itemSlot));
-				}
-			});
+				});
+			}
 		}
 		else if (e.getClick() == ClickType.SHIFT_RIGHT) {
 			Bukkit.getScheduler().runTask(Market.get(), () -> {
