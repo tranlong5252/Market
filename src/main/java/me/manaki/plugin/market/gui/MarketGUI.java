@@ -147,7 +147,7 @@ public class MarketGUI {
 		if (e.getClick() == ClickType.RIGHT) {
 			if (!Commodities.itemSlots.containsKey(itemSlot)) return;
 			if (Commodities.sell(itemSlot, player, false)) {
-				Bukkit.getScheduler().runTask(Market.get(), () -> {
+				Bukkit.getScheduler().runTaskAsynchronously(Market.get(), () -> {
 					e.getInventory().setItem(slot, getItem(itemSlot));
 				});
 			}
