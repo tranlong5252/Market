@@ -126,7 +126,7 @@ public class Commodities {
 		earned.put(player.getName(), earned.getOrDefault(player.getName(), 0d) + earn);
 
 		// Event
-		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, commodity.getModel().clone(), commodity.getAmount()));
+		Bukkit.getPluginManager().callEvent(new PlayerMarketSellEvent(player, commodity.getModel().clone(), amount));
 
 		return true;
 	}
