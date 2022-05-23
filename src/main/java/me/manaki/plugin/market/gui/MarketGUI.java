@@ -70,17 +70,26 @@ public class MarketGUI {
 			if (e.isShiftClick()) {
 				Bukkit.getScheduler().runTask(Market.get(), () -> {
 					if (!Commodities.itemSlots.containsKey(slot)) return;
+					if ((Commodities.getPoint(slot) * 100 / Market.BASE_POINT)<5) {
+						player.sendMessage("§cVật phẩm có tỉ lệ giá thấp hơn 5%!");
+						return ;
+					}
 					if (!Commodities.sell(slot, player)) {
 						player.sendMessage("§cLỗi: Phải gộp item thành stack mới bán được!");
 					} else {
-						while (Commodities.sell(slot, player))
-						e.getInventory().setItem(slot, getItem(slot));
+						while (Commodities.sell(slot, player)) {
+							e.getInventory().setItem(slot, getItem(slot));
+						}
 					}
 				});
 				return;
 			}
 			Bukkit.getScheduler().runTask(Market.get(), () -> {
 				if (!Commodities.itemSlots.containsKey(slot)) return;
+				if ((Commodities.getPoint(slot) * 100 / Market.BASE_POINT)<5) {
+					player.sendMessage("§cVật phẩm có tỉ lệ giá thấp hơn 5%!");
+					return;
+				}
 				if (!Commodities.sell(slot, player)) {
 					player.sendMessage("§cLỗi: Phải gộp item thành stack mới bán được!");
 				} else {

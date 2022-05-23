@@ -3,10 +3,10 @@ version: ${project.version}
 main: me.manaki.plugin.market.Market
 api-version: 1.16
 depend: [ Vault ]
-softdepend: [ Shops ]
+softdepend: [ Shops, LangUtils ]
 commands:
   market:
-    description: Hi I'm MankaiStep
+    description: Mở shop bán
     aliases:
       - thuonglai
       - markets

@@ -91,7 +91,6 @@ public class Commodities {
         }
         if (!has) return false;
         inv.setContents(items);
-
         // Subtract point
         int point = realPoints.get(itemId);
         if (point == 0) return true;
